@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sơ đồ loại trực tiếp</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="data:,">
+</head>
+<body>
+    <header class="app-header">
+        <h1>Sơ đồ loại trực tiếp</h1>
+        <div class="actions">
+            <a href="index.html" class="import-label">Quay lại Trang chính</a>
+        </div>
+    </header>
+    <main class="container">
+        <section class="card">
+            <div class="row controls-row">
+                <div id="group-qualifiers" class="row" style="gap:12px;flex-wrap:wrap"></div>
+                <label><input id="include-best-thirds" type="checkbox"> Lấy thêm đội hạng 3 tốt nhất</label>
+                <label>Số đội hạng 3
+                    <input id="num-best-thirds" type="number" min="1" value="0" style="width:90px">
+                </label>
+                <button id="btn-generate-bracket">Tạo nhánh từ vòng bảng</button>
+                <button id="btn-clear-bracket" class="danger">Xoá nhánh</button>
+                <div class="zoom">
+                    <span class="muted">Thu phóng:</span>
+                    <button id="zoom-out" class="btn-small">-</button>
+                    <button id="zoom-reset" class="btn-small">100%</button>
+                    <button id="zoom-in" class="btn-small">+</button>
+                </div>
+            </div>
+            <div id="group-summary" class="muted" style="margin:8px 0 12px 0"></div>
+            <div id="bracket"></div>
+            <div id="champion" style="margin-top:12px"></div>
+        </section>
+    </main>
+    <footer class="app-footer">
+        <small>Đọc dữ liệu từ LocalStorage.</small>
+    </footer>
+    <script src="bracket.js"></script>
+    </body>
+    </html>
+
+

@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quản lý Giải Đấu Của Sân Etihad</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="data:,">
+</head>
+<body>
+    <header id="app-header" class="app-header">
+        <h1>Quản lý Giải Đấu Của Sân Etihad</h1>
+        <div class="actions">
+            <label>Bảng
+                <select id="group-select"></select>
+            </label>
+            <button id="btn-add-group" title="Thêm bảng mới">+ Bảng</button>
+            <button id="btn-rename-group" title="Đổi tên bảng">Đổi tên</button>
+            <button id="btn-del-group" class="danger" title="Xoá bảng hiện tại">Xoá bảng</button>
+            <button id="btn-new" title="Tạo mới (xoá dữ liệu hiện tại)">Tạo mới</button>
+            <button id="btn-save" title="Lưu vào trình duyệt">Lưu</button>
+            <button id="btn-export" title="Xuất JSON">Xuất</button>
+            <label class="import-label" for="import-file">Nhập</label>
+            <input id="import-file" type="file" accept="application/json">
+            <a href="bracket.html" id="btn-open-bracket" class="import-label" title="Mở sơ đồ loại trực tiếp">Trang Sơ đồ</a>
+            <button id="btn-logout" title="Đăng xuất" class="danger">Đăng xuất</button>
+        </div>
+    </header>
+
+    <section id="auth-screen" class="auth hidden">
+        <div class="auth-card">
+            <h2 id="auth-title">Đăng nhập</h2>
+            <div id="auth-info" class="muted"></div>
+            <div class="grid">
+                <label>Tên đăng nhập
+                    <input id="auth-username" autocomplete="username" placeholder="Tên đăng nhập">
+                </label>
+                <label>Mật khẩu
+                    <input id="auth-password" type="password" autocomplete="current-password" placeholder="Mật khẩu">
+                </label>
+            </div>
+            <div class="row">
+                <button id="btn-login">Đăng nhập</button>
+                <button id="btn-switch-setup" class="secondary">Thiết lập tài khoản</button>
+            </div>
+            <div id="setup-area" class="hidden">
+                <hr>
+                <h3>Thiết lập tài khoản lần đầu</h3>
+                <div class="grid">
+                    <label>Tên đăng nhập mới
+                        <input id="setup-username" placeholder="VD: admin">
+                    </label>
+                    <label>Mật khẩu mới
+                        <input id="setup-password" type="password" placeholder="Ít nhất 4 ký tự">
+                    </label>
+                </div>
+                <div class="row">
+                    <button id="btn-setup">Lưu tài khoản</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <main id="app-main" class="container">
+        <section class="card" id="config-section">
+            <h2>1) Cấu hình giải đấu</h2>
+            <div class="grid">
+                <label>Tên giải đấu
+                    <input id="tournament-name" placeholder="VD: Cup Mùa Xuân" maxlength="100">
+                </label>
+                <label>Thể thức
+                    <select id="tournament-type">
+                        <option value="round_robin">Vòng tròn tính điểm</option>
+                        <option value="knockout">Loại trực tiếp</option>
+                    </select>
+                </label>
+                <label>Tiêu chí xếp hạng
+                    <select id="tiebreaker-mode">
+                        <option value="fifa">Chuẩn FIFA (Tr, HS, BT → Đối đầu)</option>
+                    </select>
+                </label>
+                <label>Điểm số (Thắng/Hòa/Thua)
+                    <div class="points">
+                        <input id="point-win" type="number" min="0" value="3"> / 
+                        <input id="point-draw" type="number" min="0" value="1"> / 
+                        <input id="point-loss" type="number" min="0" value="0">
+                    </div>
+                </label>
+                <label id="label-homeaway" class="hidden">Lượt đi - lượt về
+                    <select id="home-away">
+                        <option value="single">1 lượt</option>
+                        <option value="double">Lượt đi & về</option>
+                    </select>
+                </label>
+            </div>
+            <div class="row">
+                <button id="btn-apply-config">Áp dụng cấu hình</button>
+            </div>
+        </section>
+
+        <section class="card" id="teams-section">
+            <h2>2) Quản lý đội</h2>
+            <div class="row">
+                <input id="team-name" placeholder="Tên đội">
+                <button id="btn-add-team">Thêm đội</button>
+                <button id="btn-clear-teams" class="danger">Xoá tất cả đội</button>
+            </div>
+            <details>
+                <summary>Thêm nhanh nhiều đội</summary>
+                <div class="row">
+                    <textarea id="bulk-teams" rows="4" placeholder="Mỗi dòng là một đội..."></textarea>
+                </div>
+                <div class="row">
+                    <button id="btn-bulk-add">Thêm hàng loạt</button>
+                </div>
+            </details>
+            <ul id="team-list" class="list"></ul>
+        </section>
+
+        <section class="card" id="schedule-section">
+            <h2>3) Lịch thi đấu & Nhập kết quả</h2>
+            <div class="row">
+                <button id="btn-generate-schedule">Tạo lịch</button>
+                <button id="btn-clear-schedule" class="danger">Xoá lịch</button>
+            </div>
+            <div id="fixtures"></div>
+        </section>
+
+        <section class="card" id="standings-section">
+            <h2>4) Bảng xếp hạng</h2>
+            <div id="standings"></div>
+        </section>
+
+        <section class="card" id="stats-section">
+            <h2>5) Thống kê bàn thắng</h2>
+            <div id="stats"></div>
+        </section>
+
+        <section class="card" id="h2h-section">
+            <h2>6) Bảng thắng bại (đối đầu)</h2>
+            <div id="h2h"></div>
+        </section>
+
+        
+    </main>
+
+    <footer class="app-footer">
+        <small>Lưu trữ cục bộ trên trình duyệt. Không cần máy chủ.</small>
+    </footer>
+
+    <script src="main.js"></script>
+</body>
+</html>
+
+
